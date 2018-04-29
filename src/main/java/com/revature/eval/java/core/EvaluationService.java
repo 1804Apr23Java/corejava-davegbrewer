@@ -270,35 +270,8 @@ public class EvaluationService {
 
 		public int indexOf(T t) {
 			
-			T[] arrayList;
-			
-			for (T list : sortedList) {
-				
-			}
-			
-			Integer pivot = sortedList.size()/2;
-			
-			String tStr = t.toString();
-			
-			 
-			System.out.println("You are looking for: " + tStr);
-			System.out.println("Half of list size: " + pivot);
-			System.out.println("Is it in the middle: " + (t.equals(sortedList.size()/2)));
-			
-			
-			if(t.equals(sortedList.size()/2))
-				return pivot;
-			
-			if(t.toString().compareTo(pivot.toString()) < 0) {
-				System.out.println("< 0");
-				
-			} else
-			if(t.toString().compareTo(pivot.toString()) > 0) {
-				System.out.println("> 0");
-			}
-				
-			return sortedList.indexOf(t);
-		}
+			return 0;
+					}
 
 		public BinarySearch(List<T> sortedList) {
 			super();
