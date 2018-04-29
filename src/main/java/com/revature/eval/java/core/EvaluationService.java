@@ -14,8 +14,11 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String reverse(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		char[] reversed = new char[string.length()];
+		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
+			reversed[j] = string.charAt(i);
+		}
+		return new String(reversed);
 	}
 
 	/**
@@ -27,8 +30,14 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		String acronym = "";
+		String[] strArr = phrase.split("[- ]");
+		
+		for (String s : strArr) 
+			acronym = acronym.concat(s.substring(0, 1));
+			
+		return acronym.toUpperCase();
 	}
 
 	/**
@@ -81,20 +90,22 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo && sideTwo == sideThree && sideOne == sideThree)
+				return true;		
+			return false;	
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
+			if (sideOne == sideTwo || sideTwo == sideThree || sideOne == sideThree)
+				return true;			
 			return false;
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(this.isIsosceles())
+				return false;	
+			return true;
 		}
-
 	}
 
 	/**
@@ -113,8 +124,30 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		int score = 0;
+		string = string.toUpperCase();		
+		
+		for(int i = 0, s = string.length(); i < s; i++) {
+						
+			char c = string.charAt(i);					
+			
+			if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U' || c == 'L' || c == 'N' || c == 'R' || c == 'S' || c == 'T')
+				score += 1;
+			else if (c == 'D' || c == 'G')
+				score +=2;
+			else if (c == 'B' || c == 'C' || c == 'M' || c == 'P')
+				score += 3;
+			else if (c == 'F' || c == 'H' || c == 'V' || c == 'W' || c == 'Y')
+				score += 4;
+			else if (c == 'K')
+				score += 5;
+			else if (c == 'J' || c == 'X')
+				score += 8;
+			else if (c == 'Q' || c == 'Z')
+				score += 10;
+		}		
+		return score;
 	}
 
 	/**
@@ -149,8 +182,30 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		try{
+			
+			if(string.length() > 10) {
+				System.out.println("Hey");
+				throw new IllegalArgumentException();
+				
+			}
+			
+			String[] strArr = string.split("[-.!@():a-zA-Z ]");		
+			string = "";
+			
+			for (String s : strArr)	
+				string = string.concat(s);		
+	
+			if(string.length() != 10)
+				throw new IllegalArgumentException();
+			
+			System.out.println(string);
+			
+			} catch(IllegalArgumentException e) {
+				System.out.println(string + " threw IllegalArgumentException");
+			}
+		return string;
 	}
 
 	/**
@@ -163,8 +218,16 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		Map<String, Integer> wcMap = new java.util.HashMap<>();
+		string = string.replace("\n","");
+		String[] strArr = string.split("[,.;: ]");
+		
+		for(String s : strArr) {
+			if(wcMap.get(s) == null) { wcMap.put(s, 1);} 
+			else if (wcMap.containsKey(s)) { wcMap.put(s, wcMap.get(s) + 1);}			
+		}		
+		return wcMap;
 	}
 
 	/**
@@ -206,8 +269,35 @@ public class EvaluationService {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+			
+			T[] arrayList;
+			
+			for (T list : sortedList) {
+				
+			}
+			
+			Integer pivot = sortedList.size()/2;
+			
+			String tStr = t.toString();
+			
+			 
+			System.out.println("You are looking for: " + tStr);
+			System.out.println("Half of list size: " + pivot);
+			System.out.println("Is it in the middle: " + (t.equals(sortedList.size()/2)));
+			
+			
+			if(t.equals(sortedList.size()/2))
+				return pivot;
+			
+			if(t.toString().compareTo(pivot.toString()) < 0) {
+				System.out.println("< 0");
+				
+			} else
+			if(t.toString().compareTo(pivot.toString()) > 0) {
+				System.out.println("> 0");
+			}
+				
+			return sortedList.indexOf(t);
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -277,7 +367,7 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
-	public List<Integer> calculatePrimeFactorsOf(long l) {
+	public List<Long> calculatePrimeFactorsOf(long l) {
 		// TODO Write an implementation for this method declaration
 		return null;
 	}
@@ -309,6 +399,7 @@ public class EvaluationService {
 	 * quick brown fox jumps over the lazy dog.
 	 */
 	static class RotationalCipher {
+		@SuppressWarnings("unused")
 		private int key;
 
 		public RotationalCipher(int key) {
