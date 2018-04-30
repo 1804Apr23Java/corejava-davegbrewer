@@ -191,8 +191,6 @@ public class EvaluationService {
 		string = string.replaceAll("\\.", "");
 		
 		string = string.replaceAll("[()-]","");
-		
-		System.out.println(string);
 			
 			if(string.length() > 10) {
 				throw new IllegalArgumentException();
@@ -337,6 +335,10 @@ public class EvaluationService {
 		abelay:
 		for(String s : strArr){		
 			
+			if(s.charAt(0) == ' ')
+				break abelay;
+			
+			
 			if (!(s.charAt(0) == 'a' || s.charAt(0) == 'e' || s.charAt(0) == 'i' || s.charAt(0) == 'o' || s.charAt(0) == 'u')) {
 				
 				for(int i = 0; i < s.length() - 1; i++) {
@@ -355,7 +357,6 @@ public class EvaluationService {
 			}
 				answer = answer.substring(0, answer.length()-1);				
 			}
-			
 			return answer;
 	}
 						
@@ -465,8 +466,6 @@ public class EvaluationService {
 	
 		@SuppressWarnings("unused")
 		private int key;
-		
-		
 
 		public RotationalCipher(int key) {
 			super();
@@ -479,7 +478,7 @@ public class EvaluationService {
 			String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
 			char[] input = string.toCharArray();
 			String buffer = "";
-			char c = 'a';
+			char c;
 			int index;
 			
 			for (int i = 0; i < input.length; i++) {
@@ -490,22 +489,19 @@ public class EvaluationService {
 					buffer = buffer + lower.charAt(index + key);
 		
 				} else if(Character.isUpperCase(input[i])) {
+										
 					c = input[i];
-					index = lower.indexOf(c);
+					index = upper.indexOf(c);
 					buffer = buffer + upper.charAt(index + key);
-				} else {
+				
+				} else {			
 					
 					c = input[i];
 					buffer = buffer + c;
-					System.out.println("Strange Char: " + c);
-					System.out.println(buffer);
 				}
-			
 			} 
-			
 			return buffer;
 		}
-
 	}
 
 	/**
@@ -538,7 +534,6 @@ public class EvaluationService {
 				counter++;
 		}
 		
-		System.out.println(p);
 		*/
 		return 0;
 	}
@@ -902,8 +897,6 @@ public class EvaluationService {
 			panagram.put(s.charAt(0), 1);
 		}
 		
-		System.out.println("Panagram size: " + panagram.size());
-	
 		if(panagram.size() == 26)
 			return true;
 		return false;
@@ -990,10 +983,7 @@ public class EvaluationService {
 		if (!string.replaceAll("\\s+", "").matches("[0-9]+")) 
 			return false;
 		
-		string = string.replaceAll(" ","");
-		
-		System.out.println(string);
-		
+		string = string.replaceAll(" ","");		
 
 		if(string.length() < 1) 
 			return false;
@@ -1003,10 +993,7 @@ public class EvaluationService {
 		
 		boolean flipper = false;
 		int sum = 0;
-		
-
-		System.out.println("Luhn String: " + string);
-		
+				
 		String[] strArr = string.split("");
 		
 		
@@ -1017,17 +1004,10 @@ public class EvaluationService {
 				if(x > 9) {
 					x -= 9;
 				}
-				
-				System.out.println("X is: " + x);
 			}
 			flipper ^= true;
 			sum += x;
-			System.out.println("Sum: " + sum);
-			
-			
-				
-		}
-		
+		}		
 		return (sum % 10 == 0);
 		
 	}
@@ -1074,7 +1054,6 @@ public class EvaluationService {
 		
 		m.find();
 		x = Integer.parseInt(m.group(0));
-		System.out.println("x: " + x);
 		m.find();
 		y = Integer.parseInt(m.group(1));	
 
