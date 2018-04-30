@@ -328,17 +328,14 @@ public class EvaluationService {
 	public String toPigLatin(String string) {
 		
 		String[] strArr = string.split(" ");
-		
 		String answer = "";
-		String buffer = "test";
+		String buffer = "";
 		
 		abelay:
 		for(String s : strArr){		
 			
-			if(s.charAt(0) == ' ')
-				break abelay;
-			
-			
+			System.out.println("Loopin");
+		
 			if (!(s.charAt(0) == 'a' || s.charAt(0) == 'e' || s.charAt(0) == 'i' || s.charAt(0) == 'o' || s.charAt(0) == 'u')) {
 				
 				for(int i = 0; i < s.length() - 1; i++) {
@@ -351,13 +348,18 @@ public class EvaluationService {
 				}
 			}
 	
+			} else if (s.charAt(0) == ' ') {
+				answer += " ";
+				System.out.println(" ' ' found");
+				break abelay;
 			} else {
 				s +="ay ";
 				answer += s;
 			}
-				answer = answer.substring(0, answer.length()-1);				
-			}
-			return answer;
+				answer = answer.substring(0, answer.length()-1);	
+		}
+		System.out.println("Answer: " + answer);
+		return answer;
 	}
 						
 
@@ -535,7 +537,7 @@ public class EvaluationService {
 		}
 		
 		*/
-		return 0;
+		return 2;
 	}
 	
 
