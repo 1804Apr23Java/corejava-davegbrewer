@@ -475,37 +475,35 @@ public class EvaluationService {
 
 		public String rotate(String string) {
 			
-			
-			String[] strArr = string.split("");
-			String lower = "abcdefghijklmnopqrstuvwxyz";
-			String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			//String[] lower = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
-			//String[] upper = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+			String lower = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
+			String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
 			char[] input = string.toCharArray();
 			String buffer = "";
-			char c;
-			int index = 0;
-			
-			System.out.println("Key: " + key);
-			
-			System.out.println("Is lowercase: " + Character.isLowerCase(input[0]));
+			char c = 'a';
+			int index;
 			
 			for (int i = 0; i < input.length; i++) {
+				index = 0;
 				if(Character.isLowerCase(input[i])) {
 					c = input[i];
-					System.out.println("c: " + c);
-					index = lower.indexOf(c+key);
-					System.out.println("Index: " + index);
-					buffer = buffer + lower.charAt(index);
+					index = lower.indexOf(c);
+					buffer = buffer + lower.charAt(index + key);
+		
+				} else if(Character.isUpperCase(input[i])) {
+					c = input[i];
+					index = lower.indexOf(c);
+					buffer = buffer + upper.charAt(index + key);
+				} else {
 					
-					System.out.println("Lower buffer: " + buffer);
-			}
-			System.out.println(buffer);
+					c = input[i];
+					buffer = buffer + c;
+					System.out.println("Strange Char: " + c);
+					System.out.println(buffer);
+				}
 			
-		} 
-		
-		
-			return null;
+			} 
+			
+			return buffer;
 		}
 
 	}
