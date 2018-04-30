@@ -1,8 +1,15 @@
 package com.revature.eval.java.core;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EvaluationService {
 
@@ -90,21 +97,16 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			if (sideOne == sideTwo && sideTwo == sideThree && sideOne == sideThree)
-				return true;		
-			return false;	
+			return (sideOne == sideTwo && sideTwo == sideThree && sideOne == sideThree);
 		}
 
 		public boolean isIsosceles() {
-			if (sideOne == sideTwo || sideTwo == sideThree || sideOne == sideThree)
-				return true;			
-			return false;
+			return (sideOne == sideTwo || sideTwo == sideThree || sideOne == sideThree);
+				
 		}
 
 		public boolean isScalene() {
-			if(this.isIsosceles())
-				return false;	
-			return true;
+			return(!this.isIsosceles());
 		}
 	}
 
@@ -183,10 +185,16 @@ public class EvaluationService {
 	 */
 	public String cleanPhoneNumber(String string) {
 		
-		try{
+
+		string = string.replaceAll("\\s+", "");
+		
+		string = string.replaceAll("\\.", "");
+		
+		string = string.replaceAll("[()-]","");
+		
+		System.out.println(string);
 			
 			if(string.length() > 10) {
-				System.out.println("Hey");
 				throw new IllegalArgumentException();
 				
 			}
@@ -199,12 +207,7 @@ public class EvaluationService {
 	
 			if(string.length() != 10)
 				throw new IllegalArgumentException();
-			
-			System.out.println(string);
-			
-			} catch(IllegalArgumentException e) {
-				System.out.println(string + " threw IllegalArgumentException");
-			}
+						
 		return string;
 	}
 
@@ -266,26 +269,45 @@ public class EvaluationService {
 	 * 
 	 */
 	static class BinarySearch<T> {
-		private List<T> sortedList;
 
+
+		List<T> sortedList;
+
+		@SuppressWarnings("unchecked")
 		public int indexOf(T t) {
+			int right = sortedList.size() - 1;
+			int left = 0;
 			
-			return 0;
-					}
-
+			while(left <= right) {
+				int pivot = (right + left) / 2;
+				
+				if(((Comparable<T>) sortedList.get(pivot)).compareTo(t) == 0) {
+					return pivot;
+				} else 
+					if(((Comparable<T>) sortedList.get(pivot)).compareTo(t)== 1) {
+					right = pivot - 1;
+				} else {
+					left = pivot + 1;
+				}
+			}
+			
+			return -1;
+		}
+		
 		public BinarySearch(List<T> sortedList) {
 			super();
 			this.sortedList = sortedList;
 		}
 
 		public List<T> getSortedList() {
+			
 			return sortedList;
 		}
 
 		public void setSortedList(List<T> sortedList) {
 			this.sortedList = sortedList;
 		}
-
+		
 	}
 
 	/**
@@ -306,9 +328,37 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		String[] strArr = string.split(" ");
+		
+		String answer = "";
+		String buffer = "test";
+		
+		abelay:
+		for(String s : strArr){		
+			
+			if (!(s.charAt(0) == 'a' || s.charAt(0) == 'e' || s.charAt(0) == 'i' || s.charAt(0) == 'o' || s.charAt(0) == 'u')) {
+				
+				for(int i = 0; i < s.length() - 1; i++) {
+					if (s.charAt(i) == 'a' || s.charAt(i) == 'e' || s.charAt(i) == 'i' || s.charAt(i) == 'o' || s.charAt(i) == 'u') {
+					buffer = s.substring(0, i);
+					s = s.substring(i, s.length());
+					s = s + buffer + "ay";
+					answer += s;
+					break abelay;
+				}
+			}
+	
+			} else {
+				s +="ay ";
+				answer += s;
+			}
+				answer = answer.substring(0, answer.length()-1);				
+			}
+			
+			return answer;
 	}
+						
 
 	/**
 	 * 9. An Armstrong number is a number that is the sum of its own digits each
@@ -326,7 +376,23 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
+
+		Integer in = input;
+		String inputString = in.toString();
+		String[] strArr = inputString.split("");
+		int power = strArr.length;
+		int val = 0;
+		int answer = 0;
+		
+		for (String s : strArr) {
+			val = Integer.parseInt(s);
+			val = (int) java.lang.Math.pow(val, power);
+			answer += val;
+			val = 0;
+		}
+		
+		if(in == answer)
+			return true;
 		return false;
 	}
 
@@ -340,9 +406,32 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
-	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
-		return null;
+	public List<Long> calculatePrimeFactorsOf(long l) throws IllegalArgumentException {
+
+		long div = 2;
+		List<Long> list = new ArrayList<>();
+			
+		while(l != 1) {
+			if(l % div == 0 && (div % 2 != 0 || div == 2)){
+				
+				boolean prime = true;
+				
+				for(int n = 2; n <= (div / 2); n++) {
+					
+					if(div % n == 0)
+						prime = false;
+				}
+				
+				if(prime)
+					list.add(div);
+				l = l/div;
+				div = 1;
+			}
+			
+			div++;
+		} 
+		
+		return list;
 	}
 
 	/**
@@ -372,8 +461,12 @@ public class EvaluationService {
 	 * quick brown fox jumps over the lazy dog.
 	 */
 	static class RotationalCipher {
+		
+	
 		@SuppressWarnings("unused")
 		private int key;
+		
+		
 
 		public RotationalCipher(int key) {
 			super();
@@ -381,7 +474,37 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
+			
+			
+			String[] strArr = string.split("");
+			String lower = "abcdefghijklmnopqrstuvwxyz";
+			String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			//String[] lower = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+			//String[] upper = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+			char[] input = string.toCharArray();
+			String buffer = "";
+			char c;
+			int index = 0;
+			
+			System.out.println("Key: " + key);
+			
+			System.out.println("Is lowercase: " + Character.isLowerCase(input[0]));
+			
+			for (int i = 0; i < input.length; i++) {
+				if(Character.isLowerCase(input[i])) {
+					c = input[i];
+					System.out.println("c: " + c);
+					index = lower.indexOf(c+key);
+					System.out.println("Index: " + index);
+					buffer = buffer + lower.charAt(index);
+					
+					System.out.println("Lower buffer: " + buffer);
+			}
+			System.out.println(buffer);
+			
+		} 
+		
+		
 			return null;
 		}
 
@@ -400,9 +523,28 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
+		
+		/*
+		int counter = 0;
+		int p = 2;
+		
+		while (counter <!= i) {
+			p++
+			for(int j = 2; j <= p; j++) {
+				if(p % j == 0) {
+					break;
+				}
+			}
+			
+			if (i == p)
+				counter++;
+		}
+		
+		System.out.println(p);
+		*/
 		return 0;
 	}
+	
 
 	/**
 	 * 13 & 14. Create an implementation of the atbash cipher, an ancient encryption
@@ -437,8 +579,118 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+		
+			String answer = "";
+			
+			string = string.replaceAll(" ", "");			
+			char[] charArr = string.toCharArray();
+			
+			for(char c : charArr) {
+				
+				switch (c) {
+					case 'a':
+					case 'A': answer = answer.concat("z");
+						continue;	
+					case 'b':
+					case 'B': answer = answer.concat("y");
+						continue;
+					case 'c':
+					case 'C': answer = answer.concat("x");
+						continue;
+					case 'd': 
+					case 'D': answer = answer.concat("w");
+						continue;
+					case 'e': 
+					case 'E': answer = answer.concat("v");
+						continue;						
+					case 'f': 
+					case 'F': answer = answer.concat("u");
+						continue;
+					case 'g': 
+					case 'G': answer = answer.concat("t");												
+						continue;
+					case 'h': 
+					case 'H': answer = answer.concat("s");
+						continue;	
+					case 'i': 
+					case 'I': answer = answer.concat("r");
+						continue;
+					case 'j': 
+					case 'J': answer = answer.concat("q");
+						continue;					
+					case 'k': 	
+					case 'K': answer = answer.concat("p");
+						continue;						
+					case 'l': 
+					case 'L': answer = answer.concat("o");
+						continue;					
+					case 'm': 
+					case 'M': answer = answer.concat("n");
+						continue;					
+					case 'n': 
+					case 'N': answer = answer.concat("m");
+						continue;								
+					case 'o': 
+					case 'O': answer = answer.concat("l");
+						continue;		
+					case 'p': 
+					case 'P': answer = answer.concat("k");
+						continue;	
+					case 'q': 
+					case 'Q': answer = answer.concat("j");
+						continue;
+					case 'r':
+					case 'R': answer = answer.concat("i");
+						continue;	
+					case 's': 
+					case 'S': answer = answer.concat("h");
+						continue;
+					case 't': 
+					case 'T': answer = answer.concat("g");
+						continue;
+					case 'u': 
+					case 'U': answer = answer.concat("f");
+						continue;
+					case 'v': 
+					case 'V': answer = answer.concat("e");
+						continue;			
+					case 'w': 
+					case 'W': answer = answer.concat("d");
+						continue;
+					case 'x': 
+					case 'X': answer = answer.concat("c");
+						continue;
+					case 'y': 
+					case 'Y': answer = answer.concat("b");
+						continue;
+					case 'z': 
+					case 'Z': answer = answer.concat("a");
+						continue;
+					case '0': answer = answer.concat("0");
+						continue;
+					case '1': answer = answer.concat("1");
+						continue;
+					case '2': answer = answer.concat("2");
+						continue;
+					case '3': answer = answer.concat("3");
+						continue;
+					case '4': answer = answer.concat("4");
+						continue;
+					case '5': answer = answer.concat("5");
+						continue;
+					case '6': answer = answer.concat("6");
+						continue;
+					case '7': answer = answer.concat("7");
+						continue;
+					case '8': answer = answer.concat("8");
+						continue;
+					case '9': answer = answer.concat("9");
+				}
+				
+			}
+			
+			answer = answer.replaceAll(".....(?!$)", "$0 ");			
+			return answer;
 		}
 
 		/**
@@ -448,8 +700,114 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			
+			String answer = "";
+			string = string.replaceAll("[^A-Za-z0-9]+", "");			
+			char[] charArr = string.toCharArray();
+			
+			for(char c : charArr) {
+				
+				switch (c) {
+					case 'a':
+					case 'A': answer = answer.concat("z");
+						continue;	
+					case 'b':
+					case 'B': answer = answer.concat("y");
+						continue;
+					case 'c':
+					case 'C': answer = answer.concat("x");
+						continue;
+					case 'd': 
+					case 'D': answer = answer.concat("w");
+						continue;
+					case 'e': 
+					case 'E': answer = answer.concat("v");
+						continue;						
+					case 'f': 
+					case 'F': answer = answer.concat("u");
+						continue;
+					case 'g': 
+					case 'G': answer = answer.concat("t");												
+						continue;
+					case 'h': 
+					case 'H': answer = answer.concat("s");
+						continue;	
+					case 'i': 
+					case 'I': answer = answer.concat("r");
+						continue;
+					case 'j': 
+					case 'J': answer = answer.concat("q");
+						continue;					
+					case 'k': 	
+					case 'K': answer = answer.concat("p");
+						continue;						
+					case 'l': 
+					case 'L': answer = answer.concat("o");
+						continue;					
+					case 'm': 
+					case 'M': answer = answer.concat("n");
+						continue;					
+					case 'n': 
+					case 'N': answer = answer.concat("m");
+						continue;								
+					case 'o': 
+					case 'O': answer = answer.concat("l");
+						continue;		
+					case 'p': 
+					case 'P': answer = answer.concat("k");
+						continue;	
+					case 'q': 
+					case 'Q': answer = answer.concat("j");
+						continue;
+					case 'r':
+					case 'R': answer = answer.concat("i");
+						continue;	
+					case 's': 
+					case 'S': answer = answer.concat("h");
+						continue;
+					case 't': 
+					case 'T': answer = answer.concat("g");
+						continue;
+					case 'u': 
+					case 'U': answer = answer.concat("f");
+						continue;
+					case 'v': 
+					case 'V': answer = answer.concat("e");
+						continue;			
+					case 'w': 
+					case 'W': answer = answer.concat("d");
+						continue;
+					case 'x': 
+					case 'X': answer = answer.concat("c");
+						continue;
+					case 'y': 
+					case 'Y': answer = answer.concat("b");
+						continue;
+					case 'z': 
+					case 'Z': answer = answer.concat("a");
+						continue;
+					case '0': answer = answer.concat("0");
+						continue;
+					case '1': answer = answer.concat("1");
+						continue;
+					case '2': answer = answer.concat("2");
+						continue;
+					case '3': answer = answer.concat("3");
+						continue;
+					case '4': answer = answer.concat("4");
+						continue;
+					case '5': answer = answer.concat("5");
+						continue;
+					case '6': answer = answer.concat("6");
+						continue;
+					case '7': answer = answer.concat("7");
+						continue;
+					case '8': answer = answer.concat("8");
+						continue;
+					case '9': answer = answer.concat("9");
+				}
+			}		
+			return answer;
 		}
 	}
 
@@ -476,7 +834,46 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
+		
+		string = string.replaceAll("-","");
+		String[] strArr = string.split(""); 
+		String intString = "";
+		boolean hasX = false;
+		
+		for (String s : strArr) {
+			intString += s;
+		}
+
+		if(intString.length() != 10) 
+			return false;
+		
+		if(intString.substring(0, 8).matches("^[0-9]+$")) {
+			if(intString.substring(9).matches("^[0-9X]+$")) {
+				if(intString.substring(9).matches("X"))
+					hasX = true;
+				
+				if(hasX) {
+					strArr = intString.substring(0, 9).split("");
+				} else {
+				strArr = intString.split("");
+				}
+								
+				int multiplier = 10;
+				int sum = 0;
+				
+				for (String r : strArr) {
+					sum += (multiplier * Integer.parseInt(r));
+					multiplier--;
+				}	
+
+				if(hasX) 
+					sum += 10;
+				if(sum % 11 == 0) {
+					return true;
+				}
+			}
+		}
+	
 		return false;
 	}
 
@@ -494,7 +891,23 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
+
+		if(string.length() < 1) {
+			return false;
+		}
+		
+		string = string.replaceAll("[ ]", "");	
+		Map<Character, Integer> panagram = new java.util.HashMap<>();
+		String[] strArr = string.split("");
+		
+		for (String s : strArr) {
+			panagram.put(s.charAt(0), 1);
+		}
+		
+		System.out.println("Panagram size: " + panagram.size());
+	
+		if(panagram.size() == 26)
+			return true;
 		return false;
 	}
 
@@ -507,8 +920,17 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		LocalDateTime answer = null;
+		
+		if(given instanceof LocalDate) {
+			Instant pivot = ((LocalDate) given).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+			answer = LocalDateTime.ofInstant(pivot, ZoneId.systemDefault());
+		} else {
+			answer = (LocalDateTime) given;
+		}
+				
+		return answer.plusSeconds(1000000000);
 	}
 
 	/**
@@ -566,8 +988,50 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		
+		if (!string.replaceAll("\\s+", "").matches("[0-9]+")) 
+			return false;
+		
+		string = string.replaceAll(" ","");
+		
+		System.out.println(string);
+		
+
+		if(string.length() < 1) 
+			return false;
+		
+		if(string.matches((".*[a-z].*")))
+			return false;
+		
+		boolean flipper = false;
+		int sum = 0;
+		
+
+		System.out.println("Luhn String: " + string);
+		
+		String[] strArr = string.split("");
+		
+		
+		for(int i = string.length() - 1; i >= 0; i--) {
+			int x = Integer.parseInt(string.substring(i, i + 1));
+			if(flipper) {
+				x *= 2;
+				if(x > 9) {
+					x -= 9;
+				}
+				
+				System.out.println("X is: " + x);
+			}
+			flipper ^= true;
+			sum += x;
+			System.out.println("Sum: " + sum);
+			
+			
+				
+		}
+		
+		return (sum % 10 == 0);
+		
 	}
 
 	/**
@@ -598,8 +1062,37 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
-	}
 
+		String add = "plus";
+		String multiply = "multiplied";
+		String divide = "divided";
+		String sub = "minus";
+		Integer x = null;
+		Integer y = null;
+		
+		Pattern p = Pattern.compile("(-?[0-9]+)");
+		
+		Matcher m = p.matcher(string);
+		
+		m.find();
+		x = Integer.parseInt(m.group(0));
+		System.out.println("x: " + x);
+		m.find();
+		y = Integer.parseInt(m.group(1));	
+
+		if (string.toLowerCase().indexOf(add.toLowerCase()) != -1 )
+			return x + y;
+		
+		if (string.toLowerCase().indexOf(sub.toLowerCase()) != -1 )
+			return x - y;
+			
+		if (string.toLowerCase().indexOf(multiply.toLowerCase()) != -1 ) 
+			return x * y;
+			
+		if (string.toLowerCase().indexOf(divide.toLowerCase()) != -1 ) 
+			return x / y;
+		
+		return 0;
+		}
+	
 }
